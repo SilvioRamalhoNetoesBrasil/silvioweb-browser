@@ -94,18 +94,8 @@ echo 'export ULTRALIGHT_SDK_PATH="/caminho/para/ultralight-sdk"' >> ~/.bashrc
 git clone https://github.com/seu-usuario/silvioweb.git
 cd silvioweb
 
-# Compilar em modo debug
-cargo build
-
-# Compilar em modo release (otimizado)
-cargo build --release
-
 # Executar direto
 cargo run
-
-# Executar o binário release
-./target/release/silvioweb
-```
 
 ---
 

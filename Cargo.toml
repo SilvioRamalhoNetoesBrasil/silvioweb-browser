@@ -1,0 +1,27 @@
+[package]
+name = "silvioweb"
+version = "0.1.1"
+edition = "2021"
+authors = ["Silvio Neto"]
+description = "Um navegador leve baseado em Ultralight + FLTK"
+license = "MIT"
+repository = "https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser.git"
+readme = "README.md"
+keywords = ["browser", "ultralight", "fltk", "web"]
+
+[[bin]]
+name = "silvioweb"
+path = "src/main.rs"
+
+[dependencies]
+fltk = { version = "1.5.22", features = ["use-ninja", "fltk-bundled"] }
+ultralight = "0.1.7"
+ul-next = "0.5.4"
+winit = "0.30.13"
+config = "0.15.22"
+view = "0.4.1"
+renderer = "0.0.0"
+
+[profile.release]
+opt-level = 3
+lto = true

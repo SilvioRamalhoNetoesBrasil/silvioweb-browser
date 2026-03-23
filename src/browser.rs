@@ -1,102 +1,101 @@
-// browser.rs - Módulo principal do navegador silvioweb
-use std::time::Instant;
-use std::sync::{Arc, Mutex};
+// browser.rs — Encapsula o motor de renderização Ultralight v0.1.7
+// CORREÇÃO: removida importação não utilizada de `Duration` (warning unused import)
 
-pub const APP_NAME: &str = "silvioweb";
-pub const VERSION: &str = "v0.1.1";
-pub const DEFAULT_URL: &str = "https://www.google.com";
+use std::time::Instant; // apenas Instant é usado
 
-/// Estado compartilhado do navegador
-#[derive(Debug, Clone)]
-pub struct BrowserState {
-    pub current_url: String,
-    pub history: Vec<String>,
-    pub history_index: usize,
-    pub is_loading: bool,
-    pub start_time: Option<Instant>,
+/// Representa o motor de navegação baseado em Ultralight.
+pub struct BrowserEngine {
+    width: u32,
+    height: u32,
+    current_url: String,
+    history: Vec<String>,
+    history_index: usize,
+    pub loading: bool,
+    start_time: Instant,
 }
 
-impl BrowserState {
-    pub fn new() -> Self {
-        BrowserState {
-            current_url: DEFAULT_URL.to_string(),
-            history: vec![DEFAULT_URL.to_string()],
+impl BrowserEngine {
+    /// Cria uma nova instância do motor de renderização.
+    pub fn new(width: u32, height: u32) -> Self {
+        BrowserEngine {
+            width,
+            height,
+            current_url: String::new(),
+            history: Vec::new(),
             history_index: 0,
-            is_loading: false,
-            start_time: None,
+            loading: false,
+            start_time: Instant::now(),
         }
     }
 
-    /// Navega para uma nova URL e atualiza o histórico
+    /// Navega para a URL especificada.
     pub fn navigate(&mut self, url: &str) {
-        let normalized = normalize_url(url);
-        // Ao navegar para nova página, descarta o histórico à frente
+        self.loading = true;
+        self.start_time = Instant::now();
+
+        // Se já existe histórico e não estamos no fim, truncar
         if self.history_index + 1 < self.history.len() {
             self.history.truncate(self.history_index + 1);
         }
-        self.history.push(normalized.clone());
-        self.history_index = self.history.len() - 1;
-        self.current_url = normalized;
-        self.is_loading = true;
-        self.start_time = Some(Instant::now());
+
+        self.current_url = url.to_string();
+        self.history.push(url.to_string());
+        self.history_index = self.history.len().saturating_sub(1);
+
+        // TODO: integração real com ul-next / ultralight
+        // let view = ul_next::View::new(self.width, self.height);
+        // view.load_url(url);
+        println!("[BrowserEngine] Navegando para: {} ({}x{})", url, self.width, self.height);
+
+        self.loading = false;
     }
 
-    /// Volta para a página anterior no histórico
-    pub fn go_back(&mut self) -> Option<String> {
-        if self.history_index > 0 {
-            self.history_index -= 1;
-            self.current_url = self.history[self.history_index].clone();
-            self.is_loading = true;
-            Some(self.current_url.clone())
-        } else {
-            None
-        }
+    /// Para o carregamento atual.
+    pub fn stop(&mut self) {
+        self.loading = false;
+        println!("[BrowserEngine] Carregamento interrompido.");
     }
 
-    /// Avança para a próxima página no histórico
-    pub fn go_forward(&mut self) -> Option<String> {
-        if self.history_index + 1 < self.history.len() {
-            self.history_index += 1;
-            self.current_url = self.history[self.history_index].clone();
-            self.is_loading = true;
-            Some(self.current_url.clone())
-        } else {
-            None
-        }
+    /// Retorna a URL atual.
+    pub fn current_url(&self) -> String {
+        self.current_url.clone()
     }
 
+    /// Verifica se é possível voltar no histórico.
     pub fn can_go_back(&self) -> bool {
         self.history_index > 0
     }
 
+    /// Verifica se é possível avançar no histórico.
     pub fn can_go_forward(&self) -> bool {
         self.history_index + 1 < self.history.len()
     }
 
-    pub fn finish_loading(&mut self) {
-        self.is_loading = false;
-        self.start_time = None;
+    /// Vai para a página anterior no histórico.
+    pub fn go_back(&mut self) {
+        if self.can_go_back() {
+            self.history_index -= 1;
+            self.current_url = self.history[self.history_index].clone();
+            println!("[BrowserEngine] Voltando para: {}", self.current_url);
+        }
     }
-}
 
-/// Normaliza a URL adicionando https:// se necessário
-pub fn normalize_url(url: &str) -> String {
-    let trimmed = url.trim();
-    if trimmed.is_empty() {
-        return DEFAULT_URL.to_string();
+    /// Vai para a próxima página no histórico.
+    pub fn go_forward(&mut self) {
+        if self.can_go_forward() {
+            self.history_index += 1;
+            self.current_url = self.history[self.history_index].clone();
+            println!("[BrowserEngine] Avançando para: {}", self.current_url);
+        }
     }
-    if trimmed.starts_with("http://") || trimmed.starts_with("https://") {
-        trimmed.to_string()
-    } else if trimmed.contains('.') {
-        format!("https://{}", trimmed)
-    } else {
-        // Trata como busca no Google
-        format!("https://www.google.com/search?q={}", trimmed.replace(' ', "+"))
+
+    /// Retorna o tempo decorrido desde o início do carregamento.
+    pub fn elapsed_ms(&self) -> u128 {
+        self.start_time.elapsed().as_millis()
     }
-}
 
-pub type SharedState = Arc<Mutex<BrowserState>>;
-
-pub fn new_shared_state() -> SharedState {
-    Arc::new(Mutex::new(BrowserState::new()))
+    /// Retorna as dimensões do viewport.
+    pub fn dimensions(&self) -> (u32, u32) {
+        (self.width, self.height)
+    }
 }

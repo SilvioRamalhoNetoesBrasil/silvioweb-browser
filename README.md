@@ -27,7 +27,8 @@ Navegador MultiFuncional baseado em **FLTK 1.5.22** e motor de renderização **
 
 ```bash
 # Atualizar repositórios
-sudo apt update
+sudo apt update -y
+sudo apt upgrade -y
 
 # Compilador Rust e Cargo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -62,6 +63,7 @@ sudo apt install -y \
 ### Linux (Fedora/RHEL)
 
 ```bash
+sudo dnf update -y
 sudo dnf install -y \
     gcc gcc-c++ cmake \
     libX11-devel libXext-devel libXft-devel \
@@ -102,39 +104,14 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ## Instalação e compilação
 
-### 1. Clonar ou criar o projeto
+### 1. Baixar o projeto
 
 ```bash
 # Se ainda não tiver o projeto
-git clone https://github.com/seu-usuario/silvioweb
-cd silvioweb
-
-# Ou criar do zero
-cargo new silvioweb
-cd silvioweb
+wget https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/download/v0.1.1/SilvioWeb-Browser-v0.1.1-MultiTab.tar.xz
+cd SilvioWeb-Browser-v0.1.1-MultiTab
 ```
-
-### 2. Copiar os arquivos-fonte
-
-Copie os arquivos `src/main.rs`, `src/browser.rs`, `src/tabs.rs`,
-`src/downloads.rs`, `src/config_manager.rs` e o `Cargo.toml` para o projeto.
-
-### 3. Compilar em modo debug
-
-```bash
-cargo build
-```
-
-### 4. Compilar em modo release (otimizado)
-
-```bash
-cargo build --release
-```
-
-O binário estará em `target/release/silvioweb` (Linux/macOS)
-ou `target\release\silvioweb.exe` (Windows).
-
-### 5. Executar diretamente
+### 2. Executar diretamente
 
 ```bash
 cargo run

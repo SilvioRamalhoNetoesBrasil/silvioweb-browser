@@ -102,13 +102,13 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ---
 
-## Instalação e Execução
+## Instalação e Desempacotamento e Execução
 
 ### 1. Baixar o projeto
 
 ```bash
 # O Projeto Simplificado
-https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/download/v0.1.1/silvioweb-browser-v0.1.1-sourcecode.tar.gz
+wget https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/download/v0.1.1/silvioweb-browser-v0.1.1-sourcecode.tar.gz
 
 # O Projeto Com MúltiFuncional
 wget https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/download/v0.1.1/SilvioWeb-Browser-v0.1.1-MultiTab.tar.xz
@@ -117,10 +117,12 @@ wget https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/dow
 ```bash
 # Extrair o Pacote Simplificado
 tar xpvf silvioweb-browser-v0.1.1-sourcecode.tar.gz
+# Entrar na Pasta
 cd SilvioWeb-Browser-v0.1.1-sourcecode
 
 # Extrair o Pacote MúltiFuncional
 tar xpvf SilvioWeb-Browser-v0.1.1-MultiTab.tar.xz
+# Entrar na Pasta
 cd SilvioWeb-Browser-v0.1.1-MultiTab
 ```
 

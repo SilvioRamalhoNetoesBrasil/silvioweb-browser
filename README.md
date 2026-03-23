@@ -90,12 +90,16 @@ echo 'export ULTRALIGHT_SDK_PATH="/caminho/para/ultralight-sdk"' >> ~/.bashrc
 ## Clonar e compilar o silvioweb
 
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/silvioweb.git
-cd silvioweb
+# Baixe o Código-Fonte do Navegador
+wget https://github.com/SilvioRamalhoNetoesBrasil/silvioweb-browser/releases/download/v0.1.1/silvioweb-browser-v0.1.1-sourcecode.tar.gz
+cd silvioweb-browser-v0.1.1-sourcecode
+
+```bash
+# Instale o Navegador
+sudo cargo install .
 
 # Executar direto
-cargo run
+silvioweb
 
 ---
 
